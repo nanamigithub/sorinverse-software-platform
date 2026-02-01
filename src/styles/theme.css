@@ -3,3 +3,230 @@ body {
   background: #0b0f1a;
   font-family: system-ui, -apple-system, BlinkMacSystemFont;
 }
+
+/* ===============================
+   Pipeline Page
+================================ */
+
+.pipeline-page {
+  padding: 32px 40px;
+  color: var(--text-primary);
+}
+
+.pipeline-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.pipeline-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.pipeline-stage {
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.03),
+    rgba(255,255,255,0.01)
+  );
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+}
+
+.pipeline-stage-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.pipeline-stage-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.pipeline-engine-tags {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+/* ===============================
+   Engine Detail
+================================ */
+
+.engine-detail {
+  margin-top: 28px;
+  padding: 24px;
+  border-radius: 16px;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.04),
+    rgba(255,255,255,0.01)
+  );
+  border: 1px solid var(--border-soft);
+}
+
+.engine-detail-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.engine-detail-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.engine-apps-empty {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+/* ===============================
+   Systems Page (v1.0)
+================================ */
+
+.systems-page {
+  padding: 32px 40px;
+  color: var(--text-primary);
+}
+
+/* Title Row */
+.pageTitleRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.pageTitle {
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: 0.2px;
+}
+
+.pageSub {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Tabs */
+.tabsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0 22px;
+}
+
+.tab {
+  appearance: none;
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
+}
+
+.tab--active {
+  background: var(--accent-soft);
+  border-color: rgba(255, 200, 80, 0.45);
+  box-shadow: 0 0 0 1px rgba(255, 200, 80, 0.10) inset;
+}
+
+/* Engine Grid */
+.engineGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .engineGrid {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+}
+@media (max-width: 720px) {
+  .systems-page {
+    padding: 22px 18px;
+  }
+  .engineGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Engine Card */
+.engineCard {
+  position: relative;
+  border-radius: 16px;
+  padding: 18px 18px 16px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.035),
+    rgba(255, 255, 255, 0.012)
+  );
+  border: 1px solid var(--border-soft);
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+  min-height: 110px;
+}
+
+.engineCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.014)
+  );
+}
+
+.engineCard:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 200, 80, 0.18);
+}
+
+/* Badge / Name / Desc */
+.engineBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: rgba(255, 200, 80, 0.95);
+  border: 1px solid rgba(255, 200, 80, 0.30);
+  background: rgba(255, 200, 80, 0.08);
+  margin-bottom: 10px;
+}
+
+.engineName {
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: 0.2px;
+  margin-bottom: 6px;
+}
+
+.engineDesc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
