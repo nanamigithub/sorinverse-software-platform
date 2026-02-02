@@ -7,6 +7,8 @@ export default function Systems() {
 
   const tabs = useMemo(() => ["All", ...engines.map((e) => e.id)], []);
   const [active, setActive] = useState("All");
+  //apps.map(app => <SystemCard {...app} />)
+
 
   return (
     <div className="systems-page">
