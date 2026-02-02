@@ -10,13 +10,6 @@ export default function Systems() {
 
   return (
     <div className="systems-page">
-      <div className="pageTitleRow">
-        <div>
-          <div className="pageTitle">Systems</div>
-          <div className="pageSub">Open engine systems and engine apps.</div>
-        </div>
-      </div>
-
       <div className="tabsRow">
         {tabs.map((t) => (
           <button

@@ -121,7 +121,6 @@ const CAT_ORDER = ["foundational","representation","simulation","execution","saf
    ROOT
 ═══════════════════════════════════════════════════════ */
 export default function App() {
-  const [tab, setTab]               = useState("architecture");
   const [search, setSearch]         = useState("");
   const [catFilter, setCatFilter]   = useState("all");
   const [selected, setSelected]     = useState(null);
@@ -147,92 +146,42 @@ export default function App() {
   const sel = selected ? ENGINES.find(e => e.id === selected) : null;
 
   return (
-    <div style={{ background:"#080c1a", color:"#c8d6e5", minHeight:"100vh", fontFamily:"'Segoe UI','Cantarell',system-ui,sans-serif" }}>
-      <style>{`
-        @keyframes fadeUp { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes pulse  { 0%,100% { box-shadow: 0 0 8px rgba(232,168,56,0.35); } 50% { box-shadow: 0 0 18px rgba(232,168,56,0.55); } }
-        input:focus { outline:none !important; border-color: #e8a83850 !important; }
-        ::-webkit-scrollbar { width:5px; }
-        ::-webkit-scrollbar-track { background:#080c1a; }
-        ::-webkit-scrollbar-thumb { background:#1a2035; border-radius:3px; }
-      `}</style>
-
-      {/* Ambient */}
-      <div style={{ position:"fixed", inset:0, pointerEvents:"none", zIndex:0, background:"radial-gradient(ellipse 70% 50% at 50% -10%, rgba(232,168,56,0.035) 0%, transparent 70%)" }} />
-
-      <div style={{ position:"relative", zIndex:1, maxHeight:"100vh", overflowY:"auto" }}>
-        {/* ── HEADER ── */}
-        <header style={{ background:"linear-gradient(180deg,#0e1220 0%,#080c1a 100%)", borderBottom:"1px solid #1a2035", padding:"14px 20px 12px", position:"sticky", top:0, zIndex:10 }}>
-          <div style={{ maxWidth:860, margin:"0 auto", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
-            <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-              <div style={{ width:30, height:30, borderRadius:6, background:"linear-gradient(135deg,#e8a838,#c47a22)", display:"flex", alignItems:"center", justifyContent:"center", animation:"pulse 3s ease infinite" }}>
-                <span style={{ color:"#080c1a", fontSize:15, fontWeight:800 }}>S</span>
-              </div>
-              <div>
-                <div style={{ fontSize:17, fontWeight:700, color:"#eef2f7", letterSpacing:"-0.3px", lineHeight:1.2 }}>SORINVERSE</div>
-                <div style={{ fontSize:8, color:"#3d4f63", letterSpacing:"2.5px", textTransform:"uppercase", fontWeight:500 }}>Platform v1.0 · Output-Centric Architecture</div>
-              </div>
-            </div>
-            <div style={{ display:"flex", gap:3, background:"#0e1220", borderRadius:6, padding:3, border:"1px solid #1a2035" }}>
-              {[{ id:"architecture", lbl:"⬡  Architecture" },{ id:"pipeline", lbl:"→  Pipeline" }].map(t => (
-                <button key={t.id} onClick={() => { setTab(t.id); if(t.id==="architecture") setSelected(null); }} style={{
-                  background: tab===t.id ? "#1a2035" : "transparent", border:"none", borderRadius:5,
-                  color: tab===t.id ? "#eef2f7" : "#4a5568", padding:"5px 13px", cursor:"pointer",
-                  fontSize:11, fontWeight: tab===t.id ? 600 : 400, transition:"all 0.2s",
-                  boxShadow: tab===t.id ? "0 1px 4px rgba(0,0,0,0.4)" : "none"
-                }}>{t.lbl}</button>
-              ))}
-            </div>
+    <div className="architecture-page">
+      {/* Search + Filter */}
+        <div style={{ display:"flex", gap:8, marginBottom:16, flexWrap:"wrap", alignItems:"center" }}>
+          <div style={{ position:"relative", flex:"1 1 160px", maxWidth:240 }}>
+            <span style={{ position:"absolute", left:10, top:"50%", transform:"translateY(-50%)", color:"#3a4a5c", fontSize:13, pointerEvents:"none" }}>⌕</span>
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search engines…"
+              style={{ width:"100%", background:"#0e1220", border:"1px solid #1a2035", borderRadius:6, padding:"6px 10px 6px 30px", color:"#c8d6e5", fontSize:12, boxSizing:"border-box", transition:"border-color 0.2s" }} />
           </div>
-        </header>
+          <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
+            <Pill active={catFilter==="all"} color="#e8a838" onClick={() => setCatFilter("all")}>All</Pill>
+            {CAT_ORDER.map(c => <Pill key={c} active={catFilter===c} color={CAT[c].color} onClick={() => setCatFilter(c)}>{CAT[c].label.split(" &")[0].split(" ").slice(0,2).join(" ")}</Pill>)}
+          </div>
+        </div>
 
-        <div style={{ maxWidth:860, margin:"0 auto", padding:"16px 20px 32px" }}>
-
-          {/* ════ ARCHITECTURE TAB ════ */}
-          {tab === "architecture" && (
-            <>
-              {/* Search + Filter */}
-              <div style={{ display:"flex", gap:8, marginBottom:16, flexWrap:"wrap", alignItems:"center" }}>
-                <div style={{ position:"relative", flex:"1 1 160px", maxWidth:240 }}>
-                  <span style={{ position:"absolute", left:10, top:"50%", transform:"translateY(-50%)", color:"#3a4a5c", fontSize:13, pointerEvents:"none" }}>⌕</span>
-                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search engines…"
-                    style={{ width:"100%", background:"#0e1220", border:"1px solid #1a2035", borderRadius:6, padding:"6px 10px 6px 30px", color:"#c8d6e5", fontSize:12, boxSizing:"border-box", transition:"border-color 0.2s" }} />
+          {/* Grouped Engine Grid */}
+          {Object.keys(grouped).length === 0
+            ? <div style={{ textAlign:"center", padding:40, color:"#3a4a5c", fontSize:13 }}>No engines match your query.</div>
+            : Object.entries(grouped).map(([cat, items]) => (
+              <div key={cat} style={{ marginBottom:16 }}>
+                <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:7, paddingLeft:1 }}>
+                  <span style={{ width:5, height:5, borderRadius:"50%", background:CAT[cat].color, boxShadow:`0 0 5px ${CAT[cat].color}70` }} />
+                  <span style={{ fontSize:9, color:CAT[cat].color, fontWeight:600, letterSpacing:"1.5px", textTransform:"uppercase" }}>{CAT[cat].label}</span>
+                  <span style={{ fontSize:8, color:"#3a4a5c" }}>({items.length})</span>
                 </div>
-                <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
-                  <Pill active={catFilter==="all"} color="#e8a838" onClick={() => setCatFilter("all")}>All</Pill>
-                  {CAT_ORDER.map(c => <Pill key={c} active={catFilter===c} color={CAT[c].color} onClick={() => setCatFilter(c)}>{CAT[c].label.split(" &")[0].split(" ").slice(0,2).join(" ")}</Pill>)}
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(185px,1fr))", gap:7 }}>
+                  {items.map((eng, idx) => (
+                    <EngineCard key={eng.id} engine={eng} isSelected={selected===eng.id}
+                      onSelect={() => setSelected(selected===eng.id ? null : eng.id)} ready={ready} delay={idx*45} />
+                  ))}
                 </div>
               </div>
+            ))
+          }
 
-              {/* Grouped Engine Grid */}
-              {Object.keys(grouped).length === 0
-                ? <div style={{ textAlign:"center", padding:40, color:"#3a4a5c", fontSize:13 }}>No engines match your query.</div>
-                : Object.entries(grouped).map(([cat, items]) => (
-                  <div key={cat} style={{ marginBottom:16 }}>
-                    <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:7, paddingLeft:1 }}>
-                      <span style={{ width:5, height:5, borderRadius:"50%", background:CAT[cat].color, boxShadow:`0 0 5px ${CAT[cat].color}70` }} />
-                      <span style={{ fontSize:9, color:CAT[cat].color, fontWeight:600, letterSpacing:"1.5px", textTransform:"uppercase" }}>{CAT[cat].label}</span>
-                      <span style={{ fontSize:8, color:"#3a4a5c" }}>({items.length})</span>
-                    </div>
-                    <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(185px,1fr))", gap:7 }}>
-                      {items.map((eng, idx) => (
-                        <EngineCard key={eng.id} engine={eng} isSelected={selected===eng.id}
-                          onSelect={() => setSelected(selected===eng.id ? null : eng.id)} ready={ready} delay={idx*45} />
-                      ))}
-                    </div>
-                  </div>
-                ))
-              }
-
-              {/* Detail Panel */}
-              {sel && <DetailPanel engine={sel} onClose={() => setSelected(null)} onNav={id => setSelected(id)} />}
-            </>
-          )}
-
-          {/* ════ PIPELINE TAB ════ */}
-          {tab === "pipeline" && <PipelineView onEngine={id => { setTab("architecture"); setSelected(id); }} />}
-        </div>
-      </div>
+      {/* Detail Panel */}
+      {sel && <DetailPanel engine={sel} onClose={() => setSelected(null)} onNav={id => setSelected(id)} />}
     </div>
   );
 }
@@ -365,7 +314,7 @@ function NavChip({ label, color, bg, border, onClick }) {
 /* ═══════════════════════════════════════════════════════
    PIPELINE VIEW
 ═══════════════════════════════════════════════════════ */
-function PipelineView({ onEngine }) {
+export function PipelineView({ onEngine }) {
   const [ready, setReady] = useState(false);
   useEffect(() => { const t = setTimeout(() => setReady(true), 80); return () => clearTimeout(t); }, []);
 
